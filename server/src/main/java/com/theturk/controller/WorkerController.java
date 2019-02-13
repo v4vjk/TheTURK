@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -45,64 +47,33 @@ public class WorkerController {
         return false;
         
     }
-//    
-//    @PostMapping("/updateuser")
-//    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-//    public boolean updateUser(@CurrentUser UserPrincipal currentUser, @RequestBody User user) {
-//    	logger.debug("updating user " + user);
-//
-//    	Optional<User> existing = userRepository.findById(user.getId());
-//    	if(existing != null) {
-//    		
-//    		existing.get().setName(user.getName());
-//    		existing.get().setUsername(user.getUsername());
-//    		existing.get().setEmail(user.getEmail());
-//    		existing.get().setRole(user.getRole());
-//    		existing.get().setUserType(user.getUserType());
-//    		existing.get().setUserGroup(user.getUserGroup());
-//    		existing.get().setPassword(passwordEncoder.encode(user.getPassword()));
-//    		
-//    		userRepository.save(existing.get());
-//    		
-//    		return true;
-//    	}
-//
-//    	return false;
-//    }
-//    
-//    @PostMapping("/adduser")
-//    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-//    public User addUser(@CurrentUser UserPrincipal currentUser, @RequestBody User user) {
-//    	logger.debug("adding new user " + user);
-//		user.setPassword(passwordEncoder.encode(user.getPassword()));
-//
-//    	return userRepository.save(user);
-//    }
-//
-//    @GetMapping("/user/me")
-//    @PreAuthorize("hasRole('USER')")
-//    public UserSummary getCurrentUser(@CurrentUser UserPrincipal currentUser) {
-//        UserSummary userSummary = new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getName());
-//        return userSummary;
-//    }
-//    
-//    @GetMapping("/user/checkUsernameAvailability")
-//    public UserIdentityAvailability checkUsernameAvailability(@RequestParam(value = "username") String username) {
-//        Boolean isAvailable = !userRepository.existsByUsername(username);
-//        return new UserIdentityAvailability(isAvailable);
-//    }
-//
-//    @GetMapping("/user/checkEmailAvailability")
-//    public UserIdentityAvailability checkEmailAvailability(@RequestParam(value = "email") String email) {
-//        Boolean isAvailable = !userRepository.existsByEmail(email);
-//        return new UserIdentityAvailability(isAvailable);
-//    }
-//    
-//
-//    @GetMapping("/allroles")
-//    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-//    public List<Role> getAllUserRoles(@CurrentUser UserPrincipal currentUser) {
-//    	logger.debug("Returning all user roles");
-//    	return roleRepository.findAll();
-//    }
+    
+    @PostMapping("/updateworker")
+    public boolean updateWorker(@RequestBody Worker worker) {
+    	logger.debug("updating worker " + worker);
+
+    	Optional<Worker> existing = workerRepository.findById(worker.getId());
+    	if(existing != null) {
+    		
+    		existing.get().setWorkerName(worker.getWorkerName());
+    		existing.get().setDescription(worker.getDescription());
+    		
+    		workerRepository.save(existing.get());
+    		
+    		return true;
+    	}
+
+    	return false;
+    }
+    
+    @PostMapping("/addworker")
+    public boolean addWorker(@RequestBody Worker worker) {
+    	logger.debug("adding worker " + worker);
+    	
+    	if(workerRepository.count() < 3) {
+        	return workerRepository.save(worker) != null;
+        	
+    	}
+    	return false;
+    }
 }

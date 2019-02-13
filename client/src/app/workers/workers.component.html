@@ -12,16 +12,16 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let registration of registrations; let i = index">
-          <th scope="row">{{ i + 1 }}</th>
-          <td>{{ registration.workerName }}</td>
-          <td>{{ registration.description }}</td>
-          <td>{{ registration.createdAt.day + '/' + registration.createdAt.month + '/' + registration.createdAt.year}}</td>
+        <tr *ngFor="let worker of workers; let i = index">
+          <th scope="row">{{ worker.id }}</th>
+          <td>{{ worker.workerName }}</td>
+          <td>{{ worker.description }}</td>
+          <td>{{ worker.createdAt  | date: 'dd MMM yyyy'}}</td>
           <td>
             <button type="button" class="btn btn-info" (click)="onEdit(i)">Edit</button>
           </td>
           <td>
-            <button type="button" class="btn btn-danger" (click)="onDelete(i)">Delete</button>
+            <button type="button" class="btn btn-danger" (click)="onDelete(i, worker.id)">Delete</button>
           </td>
         </tr>
       </tbody>
