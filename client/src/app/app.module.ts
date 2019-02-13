@@ -8,8 +8,8 @@ import { JobsComponent } from './jobs/jobs.component';
 import { WorkersComponent } from './workers/workers.component';
 import { ExecuteComponent } from './execute/execute.component';
 import { RequestsComponent } from './requests/requests.component'
-import { DatePipe } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -26,7 +26,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     BrowserAnimationsModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
