@@ -1,3 +1,79 @@
-<p>
-  Jobs under construction!
-</p>
+<div class="container">
+  <div class="reglist">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Job Name</th>
+          <th>Description</th>
+          <th>Class Name</th>
+          <th>Jar Name</th>
+          <th>Jar Path</th>
+          <th>Registration Date</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let job of jobs; let i = index">
+          <th scope="row">{{ job.id }}</th>
+          <td>{{ job.jobName }}</td>
+          <td>{{ job.description }}</td>
+          <td>{{ job.className }}</td>
+          <td>{{ job.jarName }}</td>
+          <td>{{ job.jarPath }}</td>
+          <td>{{ job.createdAt  | date: 'dd MMM yyyy h:mm a'}}</td>
+          <td>
+            <button type="button" class="btn btn-info" (click)="onEdit(i)">Edit</button>
+          </td>
+          <td>
+            <button type="button" class="btn btn-danger" (click)="onDelete(i, job.id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="text-right">
+      <button type="submit" class="btn btn-primary" (click)="onNew()">New</button>
+    </div>
+  </div>
+  <br>
+  <div class="regentry" *ngIf="showNew">
+    <form (ngSubmit)="onSave()">
+      <div class="form-group row">
+        <label for="firstname-input" class="col-2 col-form-label">Job Name</label>
+        <div class="col-10">
+          <input class="form-control" type="text" [(ngModel)]="regModel.jobName" name="name">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="lastname-input" class="col-2 col-form-label">Description</label>
+        <div class="col-10">
+          <input class="form-control" type="text" [(ngModel)]="regModel.description" name="description">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="lastname-input" class="col-2 col-form-label">Class Name</label>
+        <div class="col-10">
+          <input class="form-control" type="text" [(ngModel)]="regModel.className" name="className">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="lastname-input" class="col-2 col-form-label">Jar Name</label>
+        <div class="col-10">
+          <input class="form-control" type="text" [(ngModel)]="regModel.jarName" name="jarName" disabled>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="lastname-input" class="col-2 col-form-label">Jar Path</label>
+        <div class="col-10">
+          <input class="form-control" type="text" [(ngModel)]="regModel.jarPath" name="jarPath">
+        </div>
+      </div>
+      <input type="file" (change)="upload($event.target.files)" accept=".jar,.war"/>
+          Upload Percent: {{percentDone}}% <br />
+
+      <button type="submit" class="btn btn-success">{{submitType}}</button>
+      <button type="submit" class="btn btn-primary" (click)="onCancel()">Cancel</button>
+    </form>
+  </div>
+</div>

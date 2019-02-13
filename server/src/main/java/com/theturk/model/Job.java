@@ -13,7 +13,7 @@ import com.theturk.model.audit.DateAudit;
 
 @SuppressWarnings("serial")
 @Entity
-public class Jobs extends DateAudit {
+public class Job extends DateAudit {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -87,7 +87,7 @@ public class Jobs extends DateAudit {
 
 	@Override
 	public String toString() {
-		return "Jobs [id=" + id + ", jobName=" + jobName + ", description=" + description + ", className=" + className
+		return "Job [id=" + id + ", jobName=" + jobName + ", description=" + description + ", className=" + className
 				+ ", jarName=" + jarName + ", jarPath=" + jarPath + "]";
 	}
 	

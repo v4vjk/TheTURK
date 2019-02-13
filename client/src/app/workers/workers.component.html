@@ -16,7 +16,7 @@
           <th scope="row">{{ worker.id }}</th>
           <td>{{ worker.workerName }}</td>
           <td>{{ worker.description }}</td>
-          <td>{{ worker.createdAt  | date: 'dd MMM yyyy'}}</td>
+          <td>{{ worker.createdAt  | date: 'dd MMM yyyy h:mm a'}}</td>
           <td>
             <button type="button" class="btn btn-info" (click)="onEdit(i)">Edit</button>
           </td>
