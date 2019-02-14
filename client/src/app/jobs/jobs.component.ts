@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpEventType, HttpResponse } from '@angular/common/http';
 import { first } from 'rxjs/operators';
-import { ApplicationConstants } from '../models/user-constants';
+import { ApplicationConstants } from '../models/app-constants';
 import { JobsService } from '../services/jobs-service';
 import { Job } from '../models/Job';
 import swal from 'sweetalert2';
-
 
 @Component({
   selector: 'app-jobs',
@@ -172,7 +171,7 @@ export class JobsComponent implements OnInit {
         type: 'error',
         showCancelButton: false,
       });
-      
+
       return false;
     });
   }
