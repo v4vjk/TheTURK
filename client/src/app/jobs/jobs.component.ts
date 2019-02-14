@@ -4,6 +4,8 @@ import { first } from 'rxjs/operators';
 import { ApplicationConstants } from '../models/user-constants';
 import { JobsService } from '../services/jobs-service';
 import { Job } from '../models/Job';
+import swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-jobs',
@@ -64,20 +66,37 @@ export class JobsComponent implements OnInit {
   onSave() {
     if (this.submitType === 'Save') {
       // Push Job model object into Job list.
-      this.jobs.push(this.regModel);
 
       this.jobService.add(this.regModel)
       .pipe(first())
       .subscribe(
         data => {
-          console.log('Job added successfully');
           this.refreshPage();
+          
+          swal.fire({
+            title: 'Added',
+            text: 'Job ' + ApplicationConstants.ADDED_SUCCESSFULLY,
+            type: 'success',
+            showCancelButton: false,
+            timer: 3000
+          });
+
           return true;
         },
         error => {
         console.log('Failed to update job ' + error);
+        swal.fire({
+          title: 'Failed',
+          text: 'Failed to add new Job!',
+          type: 'error',
+          showCancelButton: false,
+        });
+
         return false;
       });
+      
+
+      
     } else {
       // Update the existing properties values based on model.
       this.jobs[this.selectedRow].jobName = this.regModel.jobName;
@@ -98,6 +117,12 @@ export class JobsComponent implements OnInit {
         },
         error => {
         console.log('Failed to update job ' + error);
+        swal.fire({
+          title: 'Failed',
+          text: 'Failed to update Job!',
+          type: 'error',
+          showCancelButton: false,
+        });
         return false;
       });
     }
@@ -128,11 +153,26 @@ export class JobsComponent implements OnInit {
     .pipe(first())
     .subscribe(
       data => {
-        console.log('Job ' + ApplicationConstants.DELETED_SUCCESSFULLY);
+        swal.fire({
+          title: 'Deleted!',
+          text: 'Job ' + ApplicationConstants.DELETED_SUCCESSFULLY,
+          type: 'success',
+          showCancelButton: false,
+          timer: 3000
+        });
+
         return true;
       },
       error => {
       console.log('Failed to delete Job ' + error);
+
+      swal.fire({
+        title: 'Failed',
+        text: 'Failed to delete Job!',
+        type: 'error',
+        showCancelButton: false,
+      });
+      
       return false;
     });
   }

@@ -33,7 +33,6 @@ public class Job extends DateAudit {
 	@Size(max = 100)
 	private String jarName;
 	
-	@NotBlank
 	@Size(max = 400)
 	private String jarPath;
 	

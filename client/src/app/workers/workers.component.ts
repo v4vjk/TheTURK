@@ -5,6 +5,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { WorkerService } from '../services';
 import { ApplicationConstants } from '../models/user-constants';
 import { Worker } from '../models/Worker';
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-workers',
@@ -63,18 +64,30 @@ export class WorkersComponent implements OnInit {
   onSave() {
     if (this.submitType === 'Save') {
       // Push worker model object into worker list.
-      this.workers.push(this.regModel);
+      // this.workers.push(this.regModel);
 
       this.workerService.add(this.regModel)
       .pipe(first())
       .subscribe(
         data => {
-          console.log('Worker added successfully');
+          swal.fire({
+            title: 'Added!',
+            text: 'Worker ' + ApplicationConstants.ADDED_SUCCESSFULLY,
+            type: 'success',
+            showCancelButton: false,
+            timer: 3000
+          });
+
           this.refreshPage();
           return true;
         },
         error => {
-        console.log('Failed to update Worker ' + error);
+        swal.fire({
+          title: 'Failed',
+          text: 'Failed to add new worker!',
+          type: 'error',
+          showCancelButton: false,
+        });
         return false;
       });
     } else {
@@ -94,6 +107,12 @@ export class WorkersComponent implements OnInit {
         },
         error => {
         console.log('Failed to update Worker ' + error);
+        swal.fire({
+          title: 'Failed',
+          text: 'Failed to update Worker!',
+          type: 'error',
+          showCancelButton: false,
+        });
         return false;
       });
     }
@@ -124,11 +143,25 @@ export class WorkersComponent implements OnInit {
     .pipe(first())
     .subscribe(
       data => {
-        console.log('Worker ' + ApplicationConstants.DELETED_SUCCESSFULLY);
+        swal.fire({
+          title: 'Deleted!',
+          text: 'Worker ' + ApplicationConstants.DELETED_SUCCESSFULLY,
+          type: 'success',
+          showCancelButton: false,
+          timer: 3000
+        });
+
         return true;
       },
       error => {
       console.log('Failed to delete Worker ' + error);
+      swal.fire({
+        title: 'Failed',
+        text: 'Failed to delete Worker!',
+        type: 'error',
+        showCancelButton: false,
+      });
+
       return false;
     });
   }

@@ -1,5 +1,11 @@
 <div class="container">
   <div class="reglist">
+      <div class="text-left">
+          <button type="submit" class="btn btn-primary" (click)="onNew()">New</button>
+        </div>
+        <!-- <button class="mat-raised-button btn-link btn-warning btn-just-icon"  (click)="onCreate()" rel="tooltip" title="Add User" data-placement="left">
+            <mat-icon>person_add</mat-icon>
+        </button>     -->
     <table class="table table-striped">
       <thead>
         <tr>
@@ -8,7 +14,7 @@
           <th>Description</th>
           <th>Class Name</th>
           <th>Jar Name</th>
-          <th>Jar Path</th>
+          <!-- <th>Jar Path</th> -->
           <th>Registration Date</th>
           <th></th>
           <th></th>
@@ -21,7 +27,7 @@
           <td>{{ job.description }}</td>
           <td>{{ job.className }}</td>
           <td>{{ job.jarName }}</td>
-          <td>{{ job.jarPath }}</td>
+          <!-- <td>{{ job.jarPath }}</td> -->
           <td>{{ job.createdAt  | date: 'dd MMM yyyy h:mm a'}}</td>
           <td>
             <button type="button" class="btn btn-info" (click)="onEdit(i)">Edit</button>
@@ -32,9 +38,6 @@
         </tr>
       </tbody>
     </table>
-    <div class="text-right">
-      <button type="submit" class="btn btn-primary" (click)="onNew()">New</button>
-    </div>
   </div>
   <br>
   <div class="regentry" *ngIf="showNew">
@@ -63,12 +66,12 @@
           <input class="form-control" type="text" [(ngModel)]="regModel.jarName" name="jarName" disabled>
         </div>
       </div>
-      <div class="form-group row">
+      <!-- <div class="form-group row">
         <label for="lastname-input" class="col-2 col-form-label">Jar Path</label>
         <div class="col-10">
           <input class="form-control" type="text" [(ngModel)]="regModel.jarPath" name="jarPath">
         </div>
-      </div>
+      </div> -->
       <input type="file" (change)="upload($event.target.files)" accept=".jar,.war"/>
           Upload Percent: {{percentDone}}% <br />
 
