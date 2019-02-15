@@ -1,9 +1,12 @@
 package com.theturk.model;
 
+import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
@@ -13,6 +16,11 @@ import com.theturk.model.audit.DateAudit;
 
 @SuppressWarnings("serial")
 @Entity
+@Table(name = "jobs", uniqueConstraints = {
+		@UniqueConstraint(columnNames = {
+				"jobName"
+		})
+})
 public class Job extends DateAudit {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +43,9 @@ public class Job extends DateAudit {
 	
 	@Size(max = 400)
 	private String jarPath;
+	
+//    @ManyToMany(mappedBy="jobs")
+//    Set<Worker> workers;
 	
 	public Long getId() {
 		return id;
