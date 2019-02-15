@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,17 +16,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.theturk.model.WorkerJob;
 import com.theturk.repository.ExecutionRepository;
+import com.theturk.services.ExecutionService;
 
 @RestController
 @RequestMapping("/api/execution")
 public class ExecutionController {
-    @Autowired
+	@Autowired
     private ExecutionRepository executionRepository;
     
+	@Autowired
+    private ExecutionService executionService;
+    
+    private static final Logger logger = LoggerFactory.getLogger(ExecutionController.class);
 
-    private static final Logger logger = LoggerFactory.getLogger(JobController.class);
-
-    @GetMapping("/all")
+    @PostMapping("/all")
     public List<WorkerJob> getAllWorkersJobs() {
     	logger.debug("Returning all worker jobs");
     	return executionRepository.findAll();
@@ -47,22 +49,11 @@ public class ExecutionController {
         
     }
     
-    @PostMapping("/updateexecution")
-    public boolean updateWorkerJob(@RequestBody WorkerJob workerJob) {
-    	logger.debug("updating job " + workerJob);
+    @PostMapping("/doexecute")
+    public boolean doExecuteWorkerJob(@RequestBody WorkerJob workerJob) {
+    	logger.debug("executing job " + workerJob);
 
-    	Optional<WorkerJob> existing = executionRepository.findById(workerJob.getId());
-    	if(existing != null) {
-    		
-    		existing.get().setJobId(workerJob.getJobId());
-    		existing.get().setWorkerId(workerJob.getWorkerId());
-    		
-    		executionRepository.save(existing.get());
-    		
-    		return true;
-    	}
-
-    	return false;
+    	return executionService.executeJob(workerJob);
     }
     
     @PostMapping("/addworkerjob")

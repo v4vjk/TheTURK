@@ -6,7 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.theturk.model.audit.DateAudit;
@@ -20,38 +20,55 @@ public class WorkerJob extends DateAudit {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotBlank
-	@Size(max = 40)
+	@NotNull
 	@Column(name = "job_id")
-	private String jobId;
+	private Long jobId;
 
-	@NotBlank
-	@Size(max = 40)
+	@NotNull
 	@Column(name = "worker_id")
-	private String workerId;
+	private Long workerId;
+
+
 
 	public Long getId() {
 		return id;
 	}
 
+
+
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public String getJobId() {
+
+
+	public Long getJobId() {
 		return jobId;
 	}
 
-	public void setJobId(String jobId) {
+
+
+	public void setJobId(Long jobId) {
 		this.jobId = jobId;
 	}
 
-	public String getWorkerId() {
+
+
+	public Long getWorkerId() {
 		return workerId;
 	}
 
-	public void setWorkerId(String workerId) {
+
+
+	public void setWorkerId(Long workerId) {
 		this.workerId = workerId;
+	}
+
+
+
+	@Override
+	public String toString() {
+		return "WorkerJob [id=" + id + ", jobId=" + jobId + ", workerId=" + workerId + "]";
 	}
 
 	

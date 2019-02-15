@@ -19,10 +19,15 @@
                   <tbody>
                     <tr *ngFor="let item of [].constructor(MAXJOBSPERWORKER); let i = index">
                       <!-- <th scope="row">{{ worker.id }}</th> -->
-                      <td>{{ worker.workerName }}</td>
+                      <td>
+                          <select [(ngModel)]="jobs" id="jobs">
+                              <option value="" disabled selected>select a job</option>
+                              <option *ngFor="let job of jobs" [value]="job.id">{{job.jobName + ' - ' + job.description}}</option>
+                            </select>
+                      </td>
                       <td>{{ worker.createdAt  | date: 'dd MMM yyyy h:mm a'}}</td>
                       <td>
-                          <button type="button" class="btn btn-info" (click)="onEdit(i)">Execute</button>
+                          <button type="button" class="btn btn-info" (click)="onExecute(1, 1)">Execute</button>
                       </td>
                     </tr>
                   </tbody>
