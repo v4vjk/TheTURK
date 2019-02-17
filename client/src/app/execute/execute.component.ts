@@ -8,6 +8,8 @@ import { Worker } from '../models/Worker';
 import swal from 'sweetalert2';
 import { Job } from '../models/Job';
 import { WorkerJob } from '../models/WorkerJob';
+import { Params } from '../models/params';
+
 @Component({
   selector: 'app-execute',
   templateUrl: './execute.component.html',
@@ -22,9 +24,12 @@ export class ExecuteComponent implements OnInit {
   // It maintains list of jobs
   jobs: Job[] = [];
 
+  // It max list of WorkerJob
+  workerJobs1: WorkerJob[] = [];
+
   // It maintains worker Model
   selectedWorkerJob = new WorkerJob();
-  // It maintains worker form display status. By default it will be false.
+  params = new Params();
 
   // It maintains table row index based on selection.
   selectedRow: number;
@@ -44,17 +49,27 @@ export class ExecuteComponent implements OnInit {
     this.executeService.maxJobsPerWorker().subscribe(data => {
       console.log("got MAXJOBSPERWORKER " + JSON.stringify(data));
       this.MAXJOBSPERWORKER = Number(data) ;
+
+      for (let i = 0; i < this.MAXJOBSPERWORKER; i++) {
+        var workerJob = new WorkerJob();
+  
+        this.workerJobs1.push(workerJob);
+      }
+
     }, error => {
       console.log("got error" + error);
     });
 
     this.refreshPage();
-  }
+}
 
   private refreshPage() {
     this.workerService.getAll().subscribe(data => {
       console.log("got data" + JSON.stringify(data));
       this.workers = data;
+      this.workers.forEach(worker => {
+        worker.workerJobs = this.workerJobs1;
+    });
     }, error => {
       console.log("got error" + error);
     });
@@ -65,27 +80,32 @@ export class ExecuteComponent implements OnInit {
     }, error => {
       console.log("got error" + error);
     });
+
   }
 
   // This method associate to Save Button.
-  onExecute(workerId: string, jobId: string) {
-
+  onExecute(workerId: string, jobId: string, param1: string, param2: string) {
+    
     this.selectedWorkerJob.workerId = workerId;
     this.selectedWorkerJob.jobId = jobId;
+    this.params.FIRST_NAME = param1;
+    this.params.LAST_NAME = param2;
+    this.selectedWorkerJob.params = this.params;
+
+    console.log(JSON.stringify(this.selectedWorkerJob));
 
       this.executeService.doExecute(this.selectedWorkerJob)
       .pipe(first())
       .subscribe(
         data => {
-          console.log('Worker ' + ApplicationConstants.UPDATED_SUCCESSFULLY);
-          // this.refreshPage();
+          console.log('Job executed successfully');
           return true;
         },
         error => {
-        console.log('Failed to update Worker ' + error);
+        console.log('Failed to execute job ' + error);
         swal.fire({
           title: 'Failed',
-          text: 'Failed to update Worker!',
+          text: 'Failed  to execute job!',
           type: 'error',
           showCancelButton: false,
         });

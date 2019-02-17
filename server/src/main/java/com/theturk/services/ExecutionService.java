@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.theturk.ITurkJob;
 import com.theturk.model.Job;
 import com.theturk.model.Worker;
 import com.theturk.model.WorkerJob;
@@ -60,7 +61,7 @@ public class ExecutionService {
 		
 		try {
 			 File f = new File(fileUploadLocation + File.separator + currentJob.get().getJarName());
-			 executeJob(f.toURI().toURL(), currentJob.get().getClassName());
+			 executeJob(f.toURI().toURL(), currentJob.get().getClassName(), workerJob.getParams());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -69,22 +70,24 @@ public class ExecutionService {
 		return false;		
 	}
 	
-    public static void executeJob(URL url, String className) throws IOException {
-    	URLClassLoader sysLoader = new URLClassLoader(new URL[0]);
+    public static void executeJob(URL url, String className, Map<String, String> params) throws IOException {
+    	 URL[] classUrls = { url };
+    	URLClassLoader sysLoader = new URLClassLoader(classUrls);
 
     	Method sysMethod;
 		try {
-			sysMethod = URLClassLoader.class.getDeclaredMethod("addURL", new Class[]{URL.class});
-	    	sysMethod.setAccessible(true);
-	    	Object invoke = sysMethod.invoke(sysLoader, new Object[]{url});
-	    	System.out.println("result - " + invoke);
+
 	    	
-	    	Class classToLoad = Class.forName(className, true, sysLoader);
+			Class<ITurkJob> classToLoad = (Class<ITurkJob>) Class.forName(className, true, sysLoader);
 //	    	Method method = classToLoad.getDeclaredMethod("perform");
-	    	Method method = classToLoad.getMethod("perform", Map.class);
-	    	Object instance = classToLoad.newInstance();
-	    	Object result = method.invoke(instance, new HashMap<>().put("vijay", "kumar"), url);
-	    	System.out.println("result 2 - " + invoke);
+//	    	Method method = classToLoad.getMethod("perform", Map.class);
+	    	ITurkJob instance = classToLoad.newInstance();
+	    	Map<String, String> hashMap = new HashMap<String, String>();
+	    	hashMap.put("FIRST_NAME", "vijay");
+	    	hashMap.put("LAST_NAME", "kumar");
+//	    	Object result = method.invoke(instance, hashMap);
+	    	Map<String, String> perform = instance.perform(params);
+	    	System.out.println("perform result - " + perform);
 
 		}  catch (Throwable t) {
             t.printStackTrace();

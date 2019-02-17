@@ -11,23 +11,36 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let worker of workers; let i = index">
+          <tr *ngFor="let worker of workers; let workerIdx = index">
             <th scope="row">{{ worker.id }}</th>
             <td>{{ worker.workerName }}</td>
             <td>
               <table class="table table-striped">
                   <tbody>
-                    <tr *ngFor="let item of [].constructor(MAXJOBSPERWORKER); let i = index">
-                      <!-- <th scope="row">{{ worker.id }}</th> -->
+                    <tr *ngFor="let workerJob of worker.workerJobs; let workerJobId = index">
                       <td>
-                          <select [(ngModel)]="jobs" id="jobs">
+                          <select #actions (ngModel)="jobs" id='jobs-{{workerJobId}}'>
                               <option value="" disabled selected>select a job</option>
                               <option *ngFor="let job of jobs" [value]="job.id">{{job.jobName + ' - ' + job.description}}</option>
                             </select>
                       </td>
-                      <td>{{ worker.createdAt  | date: 'dd MMM yyyy h:mm a'}}</td>
                       <td>
-                          <button type="button" class="btn btn-info" (click)="onExecute(1, 1)">Execute</button>
+                          <div>
+                              <div class="col-10">
+                                <input class="form-control" type="text" name='parameter1' #param1 placeholder="Parameter 1">
+                              </div>
+                          </div>
+                      </td>
+                      <td>
+                            <div>
+                                <div class="col-10">
+                                  <input class="form-control" type="text" name='parameter2' #param2 placeholder="Parameter 2">
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ worker.createdAt  | date: 'dd MMM yyyy h:mm a'}}</td>
+                      <td>
+                          <button type="button" class="btn btn-info" (click)="onExecute(worker.id, actions.value, param1.value, param2.value)">Execute</button>
                       </td>
                     </tr>
                   </tbody>

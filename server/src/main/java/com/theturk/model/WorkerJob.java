@@ -1,13 +1,15 @@
 package com.theturk.model;
 
+import java.util.Map;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import com.theturk.model.audit.DateAudit;
 
@@ -28,6 +30,8 @@ public class WorkerJob extends DateAudit {
 	@Column(name = "worker_id")
 	private Long workerId;
 
+	@Transient
+    private Map<String, String> params;
 
 
 	public Long getId() {
@@ -65,11 +69,21 @@ public class WorkerJob extends DateAudit {
 	}
 
 
+	public Map<String, String> getParams() {
+		return params;
+	}
+
+
+
+	public void setParams(Map<String, String> params) {
+		this.params = params;
+	}
+
+
 
 	@Override
 	public String toString() {
-		return "WorkerJob [id=" + id + ", jobId=" + jobId + ", workerId=" + workerId + "]";
+		return "WorkerJob [id=" + id + ", jobId=" + jobId + ", workerId=" + workerId + ", params=" + params + "]";
 	}
-
 	
 }

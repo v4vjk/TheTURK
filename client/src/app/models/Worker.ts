@@ -1,4 +1,5 @@
 ﻿import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { WorkerJob } from './WorkerJob';
 
 export class Worker {
     id: string;
@@ -6,4 +7,6 @@ export class Worker {
     description: string;
     createdAt: NgbDateStruct;
     updatedAt: NgbDateStruct;
+    workerJobs: WorkerJob[] = [];
+
 }
