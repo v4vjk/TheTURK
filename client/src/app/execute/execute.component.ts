@@ -34,8 +34,6 @@ export class ExecuteComponent implements OnInit {
   // It maintains table row index based on selection.
   selectedRow: number;
   MAXJOBSPERWORKER: number;
-  // It maintains Array of countries.
-  countries: string[] = ['US', 'UK', 'India', 'UAE'];
   constructor(
     private http: HttpClient,
     private workerService: WorkerService,
@@ -57,7 +55,7 @@ export class ExecuteComponent implements OnInit {
       }
 
     }, error => {
-      console.log("got error" + error);
+      console.log("got error MAXJOBSPERWORKER " + error);
     });
 
     this.refreshPage();
@@ -83,9 +81,19 @@ export class ExecuteComponent implements OnInit {
 
   }
 
-  // This method associate to Save Button.
+  // This method associate to execute.
   onExecute(workerId: string, jobId: string, param1: string, param2: string) {
     
+    //check if job is selected
+    if(jobId == "Select Job"){
+      swal.fire({
+        title: 'Job',
+        text: 'Please select Job!',
+        type: 'warning',
+        showCancelButton: false,
+      });
+      return;
+    }
     this.selectedWorkerJob.workerId = workerId;
     this.selectedWorkerJob.jobId = jobId;
     this.params.FIRST_NAME = param1;
@@ -103,12 +111,12 @@ export class ExecuteComponent implements OnInit {
         },
         error => {
         console.log('Failed to execute job ' + error);
-        swal.fire({
-          title: 'Failed',
-          text: 'Failed  to execute job!',
-          type: 'error',
-          showCancelButton: false,
-        });
+        // swal.fire({
+        //   title: 'Failed',
+        //   text: 'Failed  to execute job!',
+        //   type: 'error',
+        //   showCancelButton: false,
+        // });
         return false;
       });
   }

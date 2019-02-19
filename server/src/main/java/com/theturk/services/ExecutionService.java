@@ -1,114 +1,102 @@
 package com.theturk.services;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.time.Instant;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.WeakHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import com.theturk.ITurkJob;
-import com.theturk.model.Job;
-import com.theturk.model.Worker;
+import com.theturk.model.JobRequest;
 import com.theturk.model.WorkerJob;
 import com.theturk.repository.ExecutionRepository;
 import com.theturk.repository.JobRepository;
-import com.theturk.repository.WorkerRepository;
-import com.theturk.util.DynamicURLClassLoader;
+import com.theturk.repository.JobRequestRepository;
 
 @Service
 public class ExecutionService {
 
 	@Value("${com.theturk.fileUploadLocation}")
 	private String fileUploadLocation;
-	
+
+	@Value("${com.theturk.maxJobsPerWorker}")
+	private Long maxJobsPerWorker;
+
+	@Value("${com.theturk.maxTimeToExecuteJobInSec}")
+	private Long maxTimeToExecuteJobInSec;
+
 	@Autowired
 	private ExecutionRepository executionRepository;
-	
+    
 	@Autowired
-	private WorkerRepository workerRepository;
-	
+    private JobRequestRepository jobRequestRepository;
+    
 	@Autowired
 	private JobRepository jobRepository;
-
+	
+	private WeakHashMap<String, ThreadPoolExecutor> tpeByWorker = new WeakHashMap<String, ThreadPoolExecutor>(); 
 
 	private static final Logger logger = LoggerFactory.getLogger(ExecutionService.class);
-
-	public boolean executeJob(WorkerJob workerJob) {
+    
+	private ThreadPoolExecutor createTPE(String workerId) {
+		logger.debug("creating Semaphore for \""+workerId+'"');
+        return new ThreadPoolExecutor(maxJobsPerWorker.intValue(), maxJobsPerWorker.intValue(), 1L, TimeUnit.SECONDS, new SynchronousQueue<Runnable>());
+    }
+    
+	@Async
+	public void executeJob(WorkerJob workerJob) {
 		logger.debug("executing job service " + workerJob);
 		
+//		semaphoresByWorker.computeIfAbsent(workerJob.getWorkerId(), null);
+		ThreadPoolExecutor executor = tpeByWorker.computeIfAbsent(workerJob.getWorkerId().toString(), id -> createTPE(id));
 
-		Optional<WorkerJob> existing = executionRepository.findByWorkerIdAndJobId(workerJob.getWorkerId(), workerJob.getJobId());
+//		ThreadPoolExecutor executor = new ThreadPoolExecutor(2, 2, 1L, TimeUnit.SECONDS, new SynchronousQueue<Runnable>());
+		JobRequest jobRequest = new JobRequest();
+
+		JobTask jobTask = new JobTask(workerJob, fileUploadLocation, executionRepository, jobRequest, jobRepository);
 		
-		if(existing.isPresent()) {
-			existing.get().setUpdatedAt(Instant.now());
-			executionRepository.save(existing.get());
-		} else {
-			executionRepository.save(workerJob);
-		}
-		
-		Optional<Worker> currentWorker = workerRepository.findById(workerJob.getWorkerId());
-		Optional<Job> currentJob = jobRepository.findById(workerJob.getJobId());
+		Future<JobRequest> future = null;
 		
 		try {
-			 File f = new File(fileUploadLocation + File.separator + currentJob.get().getJarName());
-			 executeJob(f.toURI().toURL(), currentJob.get().getClassName(), workerJob.getParams());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return false;		
+			jobRequest.setWorkerId(workerJob.getWorkerId());
+			jobRequest.setJobId(workerJob.getJobId());
+			jobRequest.setStartTime(Instant.now());
+			jobRequest.setInput(workerJob.getParams());
+			jobRequest.setStatus("SUCCESS");
+			
+			future = executor.submit(jobTask);
+        
+            future.get(this.maxTimeToExecuteJobInSec, TimeUnit.SECONDS);
+        } catch (TimeoutException | InterruptedException | ExecutionException e) {
+            future.cancel(true);
+            logger.error("Terminated!");
+			jobRequest.setStatus("FAILURE");
+			jobRequest.setOutput(new HashMap<String, String>() {{
+				put("ERROR", e.toString());
+		    }});
+            e.printStackTrace();
+        } catch (RejectedExecutionException e) {
+            logger.error("Rejected!");
+			jobRequest.setStatus("REJECTED");
+			jobRequest.setOutput(new HashMap<String, String>() {{
+				put("ERROR", e.toString());
+		    }});
+            e.printStackTrace();
+        } finally {
+			jobRequest.setEndTime(Instant.now());
+			this.jobRequestRepository.save(jobRequest);
+        }
 	}
-	
-    public static void executeJob(URL url, String className, Map<String, String> params) throws IOException {
-    	 URL[] classUrls = { url };
-    	URLClassLoader sysLoader = new URLClassLoader(classUrls);
-
-    	Method sysMethod;
-		try {
-
-	    	
-			Class<ITurkJob> classToLoad = (Class<ITurkJob>) Class.forName(className, true, sysLoader);
-//	    	Method method = classToLoad.getDeclaredMethod("perform");
-//	    	Method method = classToLoad.getMethod("perform", Map.class);
-	    	ITurkJob instance = classToLoad.newInstance();
-	    	Map<String, String> hashMap = new HashMap<String, String>();
-	    	hashMap.put("FIRST_NAME", "vijay");
-	    	hashMap.put("LAST_NAME", "kumar");
-//	    	Object result = method.invoke(instance, hashMap);
-	    	Map<String, String> perform = instance.perform(params);
-	    	System.out.println("perform result - " + perform);
-
-		}  catch (Throwable t) {
-            t.printStackTrace();
-        } 
-    	
-//    	URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-//    	DynamicURLClassLoader dynaLoader = new DynamicURLClassLoader(urlClassLoader);
-//    	
-//    	dynaLoader.addURL(url);
-//    	
-//        try {
-//               
-//            Class classToLoad = Class.forName("antlr.ActionElement", true, dynaLoader);
-//            Method method = classToLoad.getDeclaredMethod("myMethod");
-//            Object instance = classToLoad.newInstance();
-//            Object result = method.invoke(instance, url);
-//            
-//        } catch (Throwable t) {
-//            t.printStackTrace();
-//            throw new IOException("Error, could not add URL to system classloader");
-//        }        
-    }
 
 }

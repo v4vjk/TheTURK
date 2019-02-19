@@ -66,16 +66,11 @@
           <input class="form-control" type="text" [(ngModel)]="regModel.jarName" name="jarName" disabled>
         </div>
       </div>
-      <!-- <div class="form-group row">
-        <label for="lastname-input" class="col-2 col-form-label">Jar Path</label>
-        <div class="col-10">
-          <input class="form-control" type="text" [(ngModel)]="regModel.jarPath" name="jarPath">
-        </div>
-      </div> -->
       <input type="file" (change)="upload($event.target.files)" accept=".jar,.war"/>
           Upload Percent: {{percentDone}}% <br />
 
-      <button type="submit" class="btn btn-success">{{submitType}}</button>
+      <button type="submit" class="btn btn-success" [disabled]="!regModel.jobName || !regModel.className || !regModel.jarName">{{submitType}}</button>
+      
       <button type="submit" class="btn btn-primary" (click)="onCancel()">Cancel</button>
     </form>
   </div>

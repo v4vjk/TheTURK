@@ -37,14 +37,14 @@ public class Worker extends DateAudit {
 	@Size(max = 200)
 	private String description;
 	    
-    @ManyToMany
-    @JoinTable(
-            name="workers_jobs",
-            joinColumns=@JoinColumn(name="job_id", referencedColumnName="id"),
-            inverseJoinColumns=@JoinColumn(name="worker_id", referencedColumnName="id")
-    )
-    @JsonIgnore
-    List<Job> jobs;
+//    @ManyToMany
+//    @JoinTable(
+//            name="workers_jobs",
+//            joinColumns=@JoinColumn(name="job_id", referencedColumnName="id"),
+//            inverseJoinColumns=@JoinColumn(name="worker_id", referencedColumnName="id")
+//    )
+//    @JsonIgnore
+//    List<Job> jobs;
     
 	public Long getId() {
 		return id;
@@ -70,13 +70,13 @@ public class Worker extends DateAudit {
 		this.description = description;
 	}
 
-	public List<Job> getJobs() {
-		return jobs;
-	}
-
-	public void setJobs(List<Job> jobs) {
-		this.jobs = jobs;
-	}
+//	public List<Job> getJobs() {
+//		return jobs;
+//	}
+//
+//	public void setJobs(List<Job> jobs) {
+//		this.jobs = jobs;
+//	}
 
 	@Override
 	public String toString() {

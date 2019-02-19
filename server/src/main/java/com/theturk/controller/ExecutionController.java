@@ -50,10 +50,10 @@ public class ExecutionController {
     }
     
     @PostMapping("/doexecute")
-    public boolean doExecuteWorkerJob(@RequestBody WorkerJob workerJob) {
+    public void doExecuteWorkerJob(@RequestBody WorkerJob workerJob) {
     	logger.debug("executing job " + workerJob);
 
-    	return executionService.executeJob(workerJob);
+    	executionService.executeJob(workerJob);
     }
     
     @PostMapping("/addworkerjob")

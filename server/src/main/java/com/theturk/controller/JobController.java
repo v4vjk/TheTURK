@@ -84,10 +84,7 @@ public class JobController {
     public boolean addJob(@RequestBody Job job) {
     	logger.debug("adding Job " + job);
     	
-    	if(jobRepository.count() < 3) {
-        	return jobRepository.save(job) != null;
-    	}
-    	return false;
+        return jobRepository.save(job) != null;
     }
     
     @PostMapping("/upload")

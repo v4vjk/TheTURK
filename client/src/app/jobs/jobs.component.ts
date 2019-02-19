@@ -30,8 +30,6 @@ export class JobsComponent implements OnInit {
   submitType: string = 'Save';
   // It maintains table row index based on selection.
   selectedRow: number;
-  // It maintains Array of countries.
-  countries: string[] = ['US', 'UK', 'India', 'UAE'];
   constructor(
     private http: HttpClient,
     private jobService: JobsService,
@@ -73,11 +71,12 @@ export class JobsComponent implements OnInit {
           this.refreshPage();
           
           swal.fire({
+            position: 'bottom-end',
             title: 'Added',
             text: 'Job ' + ApplicationConstants.ADDED_SUCCESSFULLY,
             type: 'success',
             showCancelButton: false,
-            timer: 3000
+            timer: 2000
           });
 
           return true;

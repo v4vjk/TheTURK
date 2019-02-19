@@ -1,3 +1,35 @@
-<p>
-  Requests under construction!
-</p>
+<div class="container">
+    <div class="reglist">
+      <div class="text-left">
+          <button type="submit" class="btn btn-primary" (click)="refreshPage()">Refresh</button>
+      </div>    
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Worker Id</th>
+            <th>Job Id</th>
+            <th>Status</th>
+            <th>Input</th>
+            <th>Output</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let jobRequest of jobRequests; let i = index">
+            <th scope="row">{{ jobRequest.id }}</th>
+            <td>{{ jobRequest.workerId }}</td>
+            <td>{{ jobRequest.jobId }}</td>
+            <td>{{ jobRequest.status }}</td>
+            <td>{{ jobRequest.input | json }}</td>
+            <td>{{ jobRequest.output | json }}</td>
+            <td>{{ jobRequest.startTime  | date: 'dd MMM yyyy HH:mm:ss.SSS'}}</td>
+            <td>{{ jobRequest.endTime  | date: 'dd MMM yyyy HH:mm:ss.SSS'}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <br>
+  </div>
+  

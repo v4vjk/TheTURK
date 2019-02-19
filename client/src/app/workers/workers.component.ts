@@ -17,7 +17,6 @@ import swal from 'sweetalert2';
    ]
 })
 export class WorkersComponent implements OnInit {
-
  
   // It maintains list of Workers
   workers: Worker[] = [];
@@ -29,8 +28,6 @@ export class WorkersComponent implements OnInit {
   submitType: string = 'Save';
   // It maintains table row index based on selection.
   selectedRow: number;
-  // It maintains Array of countries.
-  countries: string[] = ['US', 'UK', 'India', 'UAE'];
   constructor(
     private http: HttpClient,
     private workerService: WorkerService,
@@ -71,11 +68,12 @@ export class WorkersComponent implements OnInit {
       .subscribe(
         data => {
           swal.fire({
+            position: 'bottom-end',
             title: 'Added!',
             text: 'Worker ' + ApplicationConstants.ADDED_SUCCESSFULLY,
             type: 'success',
             showCancelButton: false,
-            timer: 3000
+            timer: 2000
           });
 
           this.refreshPage();
@@ -84,7 +82,7 @@ export class WorkersComponent implements OnInit {
         error => {
         swal.fire({
           title: 'Failed',
-          text: 'Failed to add new worker!',
+          text: 'Failed to add new worker! \n' + JSON.stringify(error.message),
           type: 'error',
           showCancelButton: false,
         });
@@ -144,11 +142,12 @@ export class WorkersComponent implements OnInit {
     .subscribe(
       data => {
         swal.fire({
+          position: 'bottom-end',
           title: 'Deleted!',
           text: 'Worker ' + ApplicationConstants.DELETED_SUCCESSFULLY,
           type: 'success',
           showCancelButton: false,
-          timer: 3000
+          timer: 2000
         });
 
         return true;
