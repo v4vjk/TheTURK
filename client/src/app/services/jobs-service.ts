@@ -14,7 +14,7 @@ export class JobsService {
   ) { }
 
   getAll() {
-    return this.http.get<any[]>(`${environment.serverUrl}/api/jobs/all`, {});
+    return this.http.post<any[]>(`${environment.serverUrl}/api/jobs/all`, {});
   }
 
   deleteJob(id: number) {

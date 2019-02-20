@@ -82,10 +82,10 @@ export class JobsComponent implements OnInit {
           return true;
         },
         error => {
-        console.log('Failed to update job ' + error);
+        console.log('Failed to add new Job ' + error.error);
         swal.fire({
           title: 'Failed',
-          text: 'Failed to add new Job!',
+          text: 'Failed to add new Job! ' + JSON.stringify(error.error),
           type: 'error',
           showCancelButton: false,
         });

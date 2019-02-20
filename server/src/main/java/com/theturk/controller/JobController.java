@@ -39,8 +39,8 @@ public class JobController {
 
     private static final Logger logger = LoggerFactory.getLogger(JobController.class);
 
-    @GetMapping("/all")
-    public List<Job> getAllWorkers() {
+    @PostMapping("/all")
+    public List<Job> getAllJobs() {
     	logger.debug("Returning all jobs");
     	return jobRepository.findAll();
     }

@@ -22,5 +22,4 @@ public class AppController {
     	logger.debug("Returning maxJobsPerWorker " + maxJobsPerWorker);
     	return maxJobsPerWorker;
     }
-        
 }

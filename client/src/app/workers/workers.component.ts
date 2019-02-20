@@ -63,8 +63,12 @@ export class WorkersComponent implements OnInit {
       // Push worker model object into worker list.
       // this.workers.push(this.regModel);
 
+      // this.workerService.add(this.regModel).subscribe(
+      //   data => console.log('success', data),
+      //   error => console.log('oops', error.error)
+      // );
+
       this.workerService.add(this.regModel)
-      .pipe(first())
       .subscribe(
         data => {
           swal.fire({
@@ -80,9 +84,10 @@ export class WorkersComponent implements OnInit {
           return true;
         },
         error => {
+          console.error(error);
         swal.fire({
           title: 'Failed',
-          text: 'Failed to add new worker! \n' + JSON.stringify(error.message),
+          text: 'Failed to add new worker! \n' + error.error,
           type: 'error',
           showCancelButton: false,
         });
