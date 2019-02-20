@@ -33,7 +33,7 @@ export class RequestsComponent implements OnInit {
     this.refreshPage();
   }
 
-  private refreshPage() {
+  refreshPage() {
     this.jobsRequestService.getAll().subscribe(data => {
       console.log("got data" + JSON.stringify(data));
       this.jobRequests = data;
