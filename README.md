@@ -19,15 +19,21 @@ Below properties (from a through g) needs to be done in application.properties f
 # = TURK Properties
 # ===============================
 a) com.theturk.fileUploadLocation=/home/vijay/fileupload - this is the location where jar files uploaded from client
+
 b) com.theturk.maxWorkersAllowedToRegister=5 - Maximum workers allowed to register in this application
+
 c) com.theturk.maxJobsPerWorker=2 - Maximum jobs allowd to execute per user
+
 d) com.theturk.maxTimeToExecuteJobInSec=5 - Maximum time allowd per job to execute
 
 # ===============================
 # = DATA SOURCE
 # ===============================
 e) spring.datasource.url=jdbc:postgresql://localhost:5432/turk - Postgresql server url and database name
+
 f) spring.datasource.username=turk - Postgresql user name
+
 g) spring.datasource.password=turk - Postgresql password
+
 
 
