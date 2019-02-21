@@ -18,15 +18,12 @@ public interface WorkerRepository extends JpaRepository<Worker, Long> {
 
 	Optional<Worker> findById(Long workerId);
 
-//	@Query(value = "INSERT INTO workers(worker_name, description) VALUES (:workerName, :description) HAVING count(*) < 2", nativeQuery = true)
-	@Query(value = "INSERT INTO workers(worker_name, description) select :workerName, :description where  exists ((\n" + 
-			"select count(a.id) from workers a HAVING count(a.id) < :maxWorkersAllowedToRegister));", nativeQuery = true)
+	//insert query which checks if max number of workers to register is reached and inserts if not 
+	@Query(value = "INSERT INTO workers(worker_name, description, created_at, updated_at) select :workerName, :description, current_timestamp, current_timestamp"
+			+ " where  exists ((select count(a.id) from workers a HAVING count(a.id) < :maxWorkersAllowedToRegister));", nativeQuery = true)
     @Modifying
     @Transactional
-    Integer insertUser(@Param("workerName") String workerName, @Param("description") String description,
+    Integer insertWorker(@Param("workerName") String workerName, @Param("description") String description,
     		@Param("maxWorkersAllowedToRegister") Long maxWorkersAllowedToRegister);
-	
-//	Object checkAndSave(Worker worker, Long maxWorkersAllowedToRegister);
-
 
 }

@@ -83,7 +83,7 @@ public class WorkerController {
 
 
 		try {
-			created = workerRepository.insertUser(worker.getWorkerName(), worker.getDescription(), maxWorkersAllowedToRegister);
+			created = workerRepository.insertWorker(worker.getWorkerName(), worker.getDescription(), maxWorkersAllowedToRegister);
 			logger.debug("worker created : " + created);
 
 			if(created < 1) {
