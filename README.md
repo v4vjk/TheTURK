@@ -13,7 +13,7 @@ This repository has 3 project
 
 2) Server :
 Server project is developed using SpringBoot.
-Below properties (from a through g) needs to be done in application.properties file
+Below properties (from a through g) needs to be changed in application.properties file according to deployment
 
 # ===============================
 # = TURK Properties

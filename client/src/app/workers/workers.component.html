@@ -34,7 +34,7 @@
   <div class="regentry" *ngIf="showNew">
     <form (ngSubmit)="onSave()">
       <div class="form-group row">
-        <label for="firstname-input" class="col-2 col-form-label">Worker Name</label>
+        <label for="firstname-input" class="col-2 col-form-label">Worker Name*</label>
         <div class="col-10">
           <input class="form-control" type="text" [(ngModel)]="regModel.workerName" name="name">
         </div>

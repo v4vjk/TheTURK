@@ -43,7 +43,7 @@
   <div class="regentry" *ngIf="showNew">
     <form (ngSubmit)="onSave()">
       <div class="form-group row">
-        <label for="firstname-input" class="col-2 col-form-label">Job Name</label>
+        <label for="firstname-input" class="col-2 col-form-label">Job Name*</label>
         <div class="col-10">
           <input class="form-control" type="text" [(ngModel)]="regModel.jobName" name="name">
         </div>
@@ -55,13 +55,13 @@
         </div>
       </div>
       <div class="form-group row">
-        <label for="lastname-input" class="col-2 col-form-label">Class Name</label>
+        <label for="lastname-input" class="col-2 col-form-label">Class Name*</label>
         <div class="col-10">
           <input class="form-control" type="text" [(ngModel)]="regModel.className" name="className">
         </div>
       </div>
       <div class="form-group row">
-        <label for="lastname-input" class="col-2 col-form-label">Jar Name</label>
+        <label for="lastname-input" class="col-2 col-form-label">Jar Name*</label>
         <div class="col-10">
           <input class="form-control" type="text" [(ngModel)]="regModel.jarName" name="jarName" disabled>
         </div>
