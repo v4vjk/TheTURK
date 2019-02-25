@@ -11,8 +11,6 @@ import java.util.concurrent.Callable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.theturk.ITurkJob;
 import com.theturk.model.Job;
@@ -20,7 +18,6 @@ import com.theturk.model.JobRequest;
 import com.theturk.model.WorkerJob;
 import com.theturk.repository.ExecutionRepository;
 import com.theturk.repository.JobRepository;
-import com.theturk.repository.JobRequestRepository;
 
 public class JobTask implements Callable<JobRequest> {
 	private static final Logger logger = LoggerFactory.getLogger(JobTask.class);
@@ -69,7 +66,7 @@ public class JobTask implements Callable<JobRequest> {
 			File jarFile = new File(this.fileUploadLocation + File.separator + currentJob.get().getJarName());
 			
 			URL[] classUrls = { jarFile.toURI().toURL() };
-			URLClassLoader customLoader = new URLClassLoader(classUrls);
+			URLClassLoader customLoader = new URLClassLoader(classUrls, ITurkJob.class.getClassLoader());
 		
 			jobRequest.setWorkerId(this.workerJob.getWorkerId());
 			jobRequest.setJobId(this.workerJob.getJobId());
